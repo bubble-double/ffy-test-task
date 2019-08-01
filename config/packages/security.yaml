@@ -1,11 +1,23 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory: { memory: ~ }
+        users:
+            entity:
+                class: 'App\Entity\User'
+                property: 'username'
+    encoders:
+         App\Entity\User:
+            algorithm: bcrypt
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        secured_area:
+            form_login:
+                login_path:     /login
+                check_path:     /login
+            logout:             true
+            anonymous:          true
         main:
             anonymous: true
 
@@ -20,3 +32,12 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        # login/logout pages
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/logout$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login_check$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        # private zone
+        - { path: ^/lk, roles: ROLE_USER }
+        # public zone
+        - { path: ^/.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
