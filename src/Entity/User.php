@@ -26,12 +26,12 @@ class User implements UserInterface
     /**
      * @Assert\Length(
      *      min = 1,
-     *      max = 255,
+     *      max = 80,
      *      minMessage = "Your email must be at least {{ limit }} characters long",
      *      maxMessage = "Your email cannot be longer than {{ limit }} characters"
      * )
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=80)
      *
      * @var string
      */
@@ -54,19 +54,24 @@ class User implements UserInterface
     /**
      * @Assert\Length(
      *      min = 1,
-     *      max = 255,
+     *      max = 80,
      *      minMessage = "Your username must be at least {{ limit }} characters long",
      *      maxMessage = "Your username cannot be longer than {{ limit }} characters"
      * )
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=80)
      *
      * @var string
      */
     protected $username;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *      max = 80,
+     *      maxMessage = "Your lastName cannot be longer than {{ limit }} characters"
+     * )
+     *
+     * @ORM\Column(type="string", length=80, nullable=true)
      *
      * @var string|null
      */
@@ -80,11 +85,40 @@ class User implements UserInterface
     protected $salt;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=512, nullable=true)
      *
      * @var string|null
      */
     protected $roles;
+
+    /**
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(type="datetime")
+     *
+     * @Gedmo\Mapping\Annotation\Timestampable(on="create")
+     *
+     * @var \DateTime
+     */
+    protected $created;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @Gedmo\Mapping\Annotation\Timestampable(on="update")
+     *
+     * @var \DateTime|null
+     */
+    protected $updated;
+
+    /**
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        $this->created = new \DateTime();
+        $this->updated = new \DateTime();
+    }
 
     /**
      * @return int
@@ -181,6 +215,38 @@ class User implements UserInterface
     {
         // @todo test task
         return [UserRolesEnum::ROLE_USER];
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated(): \DateTime
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \DateTime $created
+     */
+    public function setCreated(\DateTime $created): void
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getUpdated(): ?\DateTime
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @param \DateTime|null $updated
+     */
+    public function setUpdated(\DateTime $updated = null): void
+    {
+        $this->updated = $updated;
     }
 
     /**
