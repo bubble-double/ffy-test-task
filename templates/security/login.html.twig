@@ -2,53 +2,128 @@
 
 {% block title %}Log in!{% endblock %}
 
+{% block coustomStylesheets %}
+    <link rel="stylesheet" href="{{ asset('asset/css/auth.css') }}">
+{% endblock %}
+
 {% block body %}
-
-    <div class="container-security-background container-security-background-image"></div>
-    <div class="container-security-background container-security-background-fill"></div>
     <div class="container">
-
         <div class="row">
-            <div class="col-md-3 col-sm-2 justify-self-start"></div>
-            <div class="col justify-self-center container-security-form">
-                <form method="post">
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                <div class="card card-signin my-5">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Log in</h5>
+                        <form class="form-signin" id="loginForm" method="post">
 
-                    <h2 class="h3 mb-3 font-weight-normal text-white">Войдите с помощью учетной записи</h2>
+                            {% if error %}
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    Invalid user name or password
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endif %}
 
-                    {% if error %}
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            Неверное имя пользователя или пароль
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    {% endif %}
+                            <div class="form-label-group">
+                                <input
+                                    type="text"
+                                    id="inputUsername"
+                                    class="form-control"
+                                    name="_username"
+                                    value="{{ last_username }}"
+                                    placeholder="User name"
+                                    required
+                                    autofocus
+                                >
+                                <label for="inputUsername">User name</label>
+                            </div>
 
-                    <div class="form-group">
-                        <label for="inputUsername" class="sr-only">Username</label>
-                        <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control form-control-lg" placeholder="Username" required autofocus>
+                            <div class="form-label-group">
+                                <input
+                                        type="password"
+                                        id="inputPassword"
+                                        class="form-control"
+                                        name="_password"
+                                        placeholder="Password"
+                                        required
+                                >
+                                <label for="inputPassword">Password</label>
+                            </div>
+
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Login to you account</button>
+                            <hr class="my-4">
+
+                            <div class="p-3">
+                                <a href="{{ path('homepage') }}">&leftarrow; go back</a>
+                            </div>
+                        </form>
                     </div>
-
-                    <div class="form-group">
-                        <label for="inputPassword" class="sr-only">Password</label>
-                        <input type="password" name="_password" id="password" class="form-control form-control-lg" placeholder="Password" required>
-                    </div>
-                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                    {#
-                        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-                        See https://symfony.com/doc/current/security/remember_me.html
-
-                        <div class="checkbox mb-3">
-                            <label>
-                                <input type="checkbox" name="_remember_me"> Remember me
-                            </label>
-                        </div>
-                    #}
-                    <button class="btn btn-lg btn-dark" type="submit">Войти</button>
-                </form>
+                </div>
             </div>
-            <div class="col-md-3 col-sm-2 justify-self-end"></div>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {#<div class="container-security-background container-security-background-image"></div>#}
+    {#<div class="container-security-background container-security-background-fill"></div>#}
+    {#<div class="container">#}
+
+        {#<div class="row">#}
+            {#<div class="col-md-3 col-sm-2 justify-self-start"></div>#}
+            {#<div class="col justify-self-center container-security-form">#}
+                {#<form method="post">#}
+
+                    {#<h2 class="h3 mb-3 font-weight-normal text-white">Войдите с помощью учетной записи</h2>#}
+
+                    {#{% if error %}#}
+                        {#<div class="alert alert-warning alert-dismissible fade show" role="alert">#}
+                            {#Неверное имя пользователя или пароль#}
+                            {#<button type="button" class="close" data-dismiss="alert" aria-label="Close">#}
+                                {#<span aria-hidden="true">&times;</span>#}
+                            {#</button>#}
+                        {#</div>#}
+                    {#{% endif %}#}
+
+                    {#<div class="form-group">#}
+                        {#<label for="inputUsername" class="sr-only">Username</label>#}
+                        {#<input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control form-control-lg" placeholder="Username" required autofocus>#}
+                    {#</div>#}
+
+                    {#<div class="form-group">#}
+                        {#<label for="inputPassword" class="sr-only">Password</label>#}
+                        {#<input type="password" name="_password" id="password" class="form-control form-control-lg" placeholder="Password" required>#}
+                    {#</div>#}
+                    {#<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">#}
+
+                    {##}
+                        {#Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.#}
+                        {#See https://symfony.com/doc/current/security/remember_me.html#}
+
+                        {#<div class="checkbox mb-3">#}
+                            {#<label>#}
+                                {#<input type="checkbox" name="_remember_me"> Remember me#}
+                            {#</label>#}
+                        {#</div>#}
+                    {##}
+                    {#<button class="btn btn-lg btn-dark" type="submit">Войти</button>#}
+                {#</form>#}
+            {#</div>#}
+            {#<div class="col-md-3 col-sm-2 justify-self-end"></div>#}
+        {#</div>#}
+    {#</div>#}
 {% endblock %}
