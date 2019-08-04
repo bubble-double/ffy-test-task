@@ -11,6 +11,16 @@ use Symfony\Component\Serializer\Serializer;
 class AbstractApiController extends AbstractController
 {
     /**
+     * @var string
+     */
+    public const DEFAULT_VERSION = '0.0.1';
+
+    /**
+     * @var string
+     */
+    public const DEFAULT_MESSAGE_TYPE = 'undefined';
+
+    /**
      * @param array $data
      *
      * @return JsonResponse
@@ -43,8 +53,8 @@ class AbstractApiController extends AbstractController
         }
 
         $message = [
-            'version' => '0.0.1', // @todo for example
-            'messageType' => $messageType ?? 'undefined', // @todo for example
+            'version' => self::DEFAULT_VERSION, // @todo for example
+            'messageType' => $messageType ?? self::DEFAULT_MESSAGE_TYPE, // @todo for example
             'payload' => $data,
         ];
 
