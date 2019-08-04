@@ -1,0 +1,36 @@
+{% if
+    setDefaultConfirmationBlockId is defined
+    and setDefaultConfirmationHiddenActionId is defined
+    and setDefaultConfirmationButtonOkId is defined
+%}
+    <div
+            class="modal fade"
+            id="{{ setDefaultConfirmationBlockId }}"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to set delivery address as default?
+                </div>
+                {# action for set as dedault #}
+                <span id="{{ setDefaultConfirmationHiddenActionId }}" data-path=""></span>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="{{ setDefaultConfirmationButtonOkId }}">
+                        Yes, set as default
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}

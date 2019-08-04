@@ -3,18 +3,49 @@
 {% block title %}LK index page{% endblock %}
 
 {% block body %}
-    <h1 class="my-5">Hello, {{ app.user.username }}</h1>
+
+    {% set deliveryAddressCardClass = 'deliveryAddressCardClass' %}
+    {% set deliveryAddressCardEditButtonClass = 'deliveryAddressCardEditButtonClass' %}
+
+    {% set formBlockId = 'formBlockId' %}
+    {% set formId = 'formId' %}
+    {% set formTitleId = 'formTitle' %}
+    {% set formAlertMessageId = 'formAlertMessageId' %}
+    {% set formButtonAddNewId = 'formButtonAddNewId' %}
+    {% set formCountryId = 'formCountryId' %}
+    {% set formCityId = 'formCityId' %}
+    {% set formStreetId = 'formStreetId' %}
+    {% set formPostcodeId = 'formPostcodeId' %}
+
+    {% set setDefaultConfirmationBlockId = 'setDefaultConfirmationBlockId'%}
+    {% set setDefaultConfirmationButtonClass = 'setDefaultConfirmationButtonClass'%}
+    {% set setDefaultConfirmationHiddenActionId = 'setDefaultConfirmationHiddenActionId'%}
+    {% set setDefaultConfirmationButtonOkId = 'setDefaultConfirmationButtonOkId'%}
+
+    {% set deleteConfirmationBlockId = 'deleteConfirmationBlockId'%}
+    {% set deleteConfirmationButtonClass = 'deleteConfirmationButtonClass'%}
+    {% set deleteConfirmationHiddenActionId = 'deleteConfirmationHiddenActionId'%}
+    {% set deleteConfirmationButtonOkId = 'deleteConfirmationButtonOkId'%}
+
+    <h1 class="display-4 pt-5">Hello, {{ app.user.username }}</h1>
+    <p class="lead">
+        This are your list of addresses. You can have {{ constant('App\\Enum\\DeliveryAddress\\DeliveryAddressEnum::MAX_COUNT') }} addresses maximum.
+    </p>
     <hr class="my-5"/>
-    <h3 class="my-5">Your addresses</h3>
 
     <div class="row">
         {% if deliveryAddressesData.deliveryAddresses is defined and deliveryAddressesData.deliveryAddresses|length > 0 %}
             {% for deliveryAddresses in deliveryAddressesData.deliveryAddresses %}
 
-                {% set borderClass = deliveryAddresses.isDefault ? 'border-dark' : 'bg-light' %}
-
                 <div class="col-sm-4">
-                    <div class="card {{ borderClass }} mb-3">
+                    <div
+                        class="card mb-3 bg-light {{ deliveryAddressCardClass }}"
+                        data-delivery-address-id="{{ deliveryAddresses.id }}"
+                        data-delivery-address-country="{{ deliveryAddresses.country }}"
+                        data-delivery-address-city="{{ deliveryAddresses.city }}"
+                        data-delivery-address-street="{{ deliveryAddresses.street }}"
+                        data-delivery-address-postcode="{{ deliveryAddresses.postcode }}"
+                    >
                         <div class="card-header">
 
                             {% if deliveryAddresses.isDefault %}
@@ -22,7 +53,14 @@
                                     Default address
                                 </span>
                             {% else %}
-                                <button type="button" class="close" aria-label="Close" title="remove">
+                                <button
+                                    type="button"
+                                    class="close {{ deleteConfirmationButtonClass }}"
+                                    aria-label="Close"
+                                    title="remove"
+                                    data-toggle="modal"
+                                    data-target="#{{ deleteConfirmationBlockId }}"
+                                >
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             {% endif %}
@@ -36,12 +74,27 @@
                             </address>
 
                         </div>
-                        <div class="card-footer {{ borderClass }}">
-                            <a class="btn btn-sm btn-primary" href="#" role="button" title="edit">
+                        <div class="card-footer bg-light">
+                            <a
+                                class="btn btn-sm btn-primary {{ deliveryAddressCardEditButtonClass }}"
+                                href="#"
+                                role="button"
+                                title="edit"
+                                data-toggle="modal"
+                                data-target="#{{ formBlockId }}"
+                            >
                                 <i class="fas fa-edit"></i> Edit
                             </a>
                             {% if not deliveryAddresses.isDefault %}
-                                <a class="btn btn-sm btn-success" href="#" role="button">set as default</a>
+                                <a
+                                    class="btn btn-sm btn-outline-primary {{ setDefaultConfirmationButtonClass }}"
+                                    href="#"
+                                    role="button"
+                                    data-toggle="modal"
+                                    data-target="#{{ setDefaultConfirmationBlockId }}"
+                                >
+                                    set as default
+                                </a>
                             {% endif %}
 
                         </div>
@@ -51,28 +104,47 @@
         {% else %}
             <p class="pl-3 text-muted">No one</p>
         {% endif %}
+
     </div>
 
-    {% set modalId = 'modalId' %}
-    {% set formId = 'formId' %}
-    {% set formTitleId = 'formTitle' %}
-    {% set alertMessageId = 'alertMessageId' %}
-    {% set buttonAddNewId = 'buttonAddNewId' %}
-    <!-- Modal -->
+    <!-- Modal form -->
     {% include 'lk/delivery_address/form.modal.html.twig' with {
-        'modalId': modalId,
+        'formBlockId': formBlockId,
         'formId': formId,
         'formTitleId' : formTitleId,
-        'alertMessageId': alertMessageId
+        'formAlertMessageId': formAlertMessageId,
+        'formCountryId': formCountryId,
+        'formCityId': formCityId,
+        'formStreetId': formStreetId,
+        'formPostcodeId': formPostcodeId
     } %}
-
     {% if deliveryAddressesData.canAddNew is defined and deliveryAddressesData.canAddNew %}
         <p class="my-5">
-            <button id="{{ buttonAddNewId }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{ modalId }}">
+            <button
+                id="{{ formButtonAddNewId }}"
+                type="button"
+                class="btn btn-dark"
+                data-toggle="modal"
+                data-target="#{{ formBlockId }}"
+            >
                 Add
             </button>
         </p>
     {% endif %}
+
+    <!-- Modal set as default confirm -->
+    {% include 'lk/delivery_address/set_default_confirmation.modal.html.twig' with {
+        'setDefaultConfirmationBlockId': setDefaultConfirmationBlockId,
+        'setDefaultConfirmationHiddenActionId': setDefaultConfirmationHiddenActionId,
+        'setDefaultConfirmationButtonOkId': setDefaultConfirmationButtonOkId
+    } %}
+
+    <!-- Modal del confirm -->
+    {% include 'lk/delivery_address/delete_confirmation.modal.html.twig' with {
+        'deleteConfirmationBlockId': deleteConfirmationBlockId,
+        'deleteConfirmationHiddenActionId': deleteConfirmationHiddenActionId,
+        'deleteConfirmationButtonOkId': deleteConfirmationButtonOkId
+    } %}
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -81,6 +153,147 @@
                 e.preventDefault();
                 return false;
             });
+
+            $('#{{ formId }}').on('change keyup paste', ':input', function(e) {
+                handleFormState();
+            });
+
+            $('#{{ formBlockId }}').on('show.bs.modal', function (e) {
+                handleFormState();
+            });
+
+
+            {# create #}
+            $('#{{ formButtonAddNewId }}').click(function (e) {
+                let deliveryAddressUpdatePath = '{{ path('api_delivery_address_new') }}';
+                updateDeliveryAddressForm(deliveryAddressUpdatePath, 'POST', 'Add new delivery address');
+            });
+
+
+            {# edit #}
+            $('.{{ deliveryAddressCardEditButtonClass }}').click(function (e) {
+
+                let deliveryAddressCard = $(this).closest('.{{ deliveryAddressCardClass }}'),
+                    deliveryAddressId = deliveryAddressCard.data('delivery-address-id'),
+                    deliveryAddressCountry = deliveryAddressCard.data('delivery-address-country'),
+                    deliveryAddressCity = deliveryAddressCard.data('delivery-address-city'),
+                    deliveryAddressStreet = deliveryAddressCard.data('delivery-address-street'),
+                    deliveryAddressPostcode = deliveryAddressCard.data('delivery-address-postcode');
+
+                let rawPath = '{{ path('api_delivery_address_update', {'deliveryAddressId':0}) }}';
+                let deliveryAddressUpdatePath = rawPath.replace('0', deliveryAddressId);
+                let deliveryAddress = {
+                    'country': deliveryAddressCountry,
+                    'city': deliveryAddressCity,
+                    'street': deliveryAddressStreet,
+                    'postcode': deliveryAddressPostcode
+                };
+
+                updateDeliveryAddressForm(deliveryAddressUpdatePath, 'PUT', 'Edit delivery address', deliveryAddress);
+            });
+
+
+            {# send create|update #}
+            $('#{{ formId }} :submit').click(function (e) {
+                let form = $('#{{ formId }}');
+                let url = form.attr('action'),
+                    method = form.attr('method'),
+                    data = formDataToJson(form.serializeArray());
+
+                hideErrors();
+                if (!checkFormFields()) {
+                    return false;
+                }
+
+                sendData(url, data, method);
+            });
+
+
+            {# delete #}
+            $('.{{ deleteConfirmationButtonClass }}').click(function (e) {
+                let deliveryAddressId = $(this).closest('.{{ deliveryAddressCardClass }}').data('delivery-address-id');
+                let rawPath = '{{ path('api_delivery_address_delete', {'deliveryAddressId':0}) }}';
+                let deliveryAddressDeletePath = rawPath.replace('0', deliveryAddressId);
+                $('#{{ deleteConfirmationHiddenActionId }}').attr('data-path', deliveryAddressDeletePath);
+            });
+            $('#{{ deleteConfirmationButtonOkId }}').click(function (e) {
+                let deliveryAddressDeletePath = $('#{{ deleteConfirmationHiddenActionId }}').data('path');
+                if (deliveryAddressDeletePath) {
+                    sendData(deliveryAddressDeletePath, {}, 'DELETE');
+                }
+            });
+
+
+            {# set default #}
+            $('.{{ setDefaultConfirmationButtonClass }}').click(function (e) {
+                let deliveryAddressId = $(this).closest('.{{ deliveryAddressCardClass }}').data('delivery-address-id');
+                let rawPath = '{{ path('api_delivery_address_set_default', {'deliveryAddressId':0}) }}';
+                let deliveryAddressSetDefaultPath = rawPath.replace('0', deliveryAddressId);
+                $('#{{ setDefaultConfirmationHiddenActionId }}').attr('data-path', deliveryAddressSetDefaultPath);
+            });
+            $('#{{ setDefaultConfirmationButtonOkId }}').click(function (e) {
+                let deliveryAddressSetDefaultPath = $('#{{ setDefaultConfirmationHiddenActionId }}').data('path');
+                if (deliveryAddressSetDefaultPath) {
+                    sendData(deliveryAddressSetDefaultPath, {}, 'PUT');
+                }
+            });
+
+
+            function sendData(url, data, method) {
+                $.ajax({
+                    url: url,
+                    method: method,
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: data,
+                    success: function(responseData) {
+                        location.reload();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('Send data error: ' + errorThrown);
+                        $('#{{ formAlertMessageId }}').show();
+                    }
+                });
+
+                return false;
+            }
+
+            function updateDeliveryAddressForm(action, method, title, deliveryAddress = null) {
+                hideErrors();
+                handleFormState();
+                $('#{{ formId }}').prop('action', action);
+                $('#{{ formId }}').prop('method', method);
+                $('#{{ formTitleId }}').text(title);
+
+                $('#{{ formCountryId }}').val(deliveryAddress ? deliveryAddress.country : '');
+                $('#{{ formCityId }}').val(deliveryAddress ? deliveryAddress.city : '');
+                $('#{{ formStreetId }}').val(deliveryAddress ? deliveryAddress.street : '');
+                $('#{{ formPostcodeId }}').val(deliveryAddress ? deliveryAddress.postcode : '');
+            }
+
+            function formDataToJson(formDataAsSerializeArray) {
+                var loginFormObject = {};
+                $.each(formDataAsSerializeArray, function(i, v) {
+                    loginFormObject[v.name] = v.value;
+                });
+                return JSON.stringify(loginFormObject);
+            }
+
+            function checkFormFields() {
+                var formCountryId = $.trim($('#{{ formCountryId }}').val()),
+                    formCityId = $.trim($('#{{ formCityId }}').val()),
+                    formStreetId = $.trim($('#{{ formStreetId }}').val()),
+                    formPostcodeId = $.trim($('#{{ formPostcodeId }}').val());
+                return formCountryId && formCityId && formStreetId && formPostcodeId;
+            }
+
+            function hideErrors() {
+                $('#{{ formAlertMessageId }}').hide();
+            }
+
+            function handleFormState() {
+                $('#{{ formId }} :submit').prop('disabled', !checkFormFields());
+            }
         });
 
     </script>

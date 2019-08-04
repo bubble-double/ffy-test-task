@@ -1,0 +1,36 @@
+{% if
+    deleteConfirmationBlockId is defined
+    and deleteConfirmationHiddenActionId is defined
+    and deleteConfirmationButtonOkId is defined
+%}
+    <div
+        class="modal fade"
+        id="{{ deleteConfirmationBlockId }}"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Delete confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete delivery address?
+                </div>
+                {# action for delete #}
+                <span id="{{ deleteConfirmationHiddenActionId }}" data-path=""></span>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="{{ deleteConfirmationButtonOkId }}">
+                        Yes, delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
