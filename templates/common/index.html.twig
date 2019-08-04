@@ -3,8 +3,8 @@
 {% block title %}Homepage{% endblock %}
 
 {% block body %}
-    <h1 class="h3">Task description</h1>
-    <ul>
+    <h1 class="h3 pt-5 pb-5">Task description</h1>
+    <ul class="task-description">
         <li>
             Let's say, in our system we have two models "client" and "shipping address".
             Let's assume that we already have some existing (registered) clients in our database.
@@ -46,18 +46,7 @@
         </li>
     </ul>
 
-    <p>Click <a href="{{ path('lk_index') }}">hire</a> to go to change client addresses</p>
-
-    <div class="row">
-        <div class="col-sm-4 col-md-3 col-lg-2">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Auth by:</h5>
-                    <p class="small">Login: user</p>
-                    <p class="small">Pass: 1234566</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <p class="pt-5">Click <a href="{{ path('lk_index') }}">hire</a> for change client addresses</p>
+    <hr class="my-5"/>
 
 {% endblock %}

@@ -8,61 +8,82 @@
     <h3 class="my-5">Your addresses</h3>
 
     <div class="row">
-        <div class="col-sm-4">
-            <div class="card border-dark mb-3">
-                <div class="card-header">
-                    <span class="badge badge-success text-wrap small">
-                        Default address
-                    </span>
-                </div>
-                <div class="card-body text-dark">
-                    <h5 class="card-title"> <strong>Country</strong></h5>
-                    <address class="card-text">
-                        <strong>City</strong><br>
-                        1355 Market St, Suite 900<br>
-                    </address>
+        {% if deliveryAddressesData.deliveryAddresses is defined and deliveryAddressesData.deliveryAddresses|length > 0 %}
+            {% for deliveryAddresses in deliveryAddressesData.deliveryAddresses %}
 
-                    страну, город, почтовый индекс, улицу.
+                {% set borderClass = deliveryAddresses.isDefault ? 'border-dark' : 'bg-light' %}
 
-                </div>
-                <div class="card-footer border-dark">
-                    <a class="btn btn-sm btn-primary" href="#" role="button" title="edit">
-                        <i class="fas fa-edit"> Edit</i>
-                    </a>
-                </div>
-            </div>
-        </div>
+                <div class="col-sm-4">
+                    <div class="card {{ borderClass }} mb-3">
+                        <div class="card-header">
 
+                            {% if deliveryAddresses.isDefault %}
+                                <span class="badge badge-success text-wrap small">
+                                    Default address
+                                </span>
+                            {% else %}
+                                <button type="button" class="close" aria-label="Close" title="remove">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            {% endif %}
 
-        <div class="col-sm-4">
-            <div class="card bg-light mb-3">
-                <div class="card-header">
-                    <button type="button" class="close" aria-label="Close" title="remove">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-body text-dark">
-                    <h5 class="card-title"> <strong>Country</strong></h5>
-                    <address class="card-text">
-                        <strong>City</strong><br>
-                        1355 Market St, Suite 900<br>
-                    </address>
+                        </div>
+                        <div class="card-body text-dark">
+                            <h5 class="card-title"><strong>{{ deliveryAddresses.country }}</strong></h5>
+                            <address class="card-text">
+                                <strong>{{ deliveryAddresses.city }}</strong><br>
+                                {{ deliveryAddresses.postcode }} {{ deliveryAddresses.street }}<br>
+                            </address>
 
-                    страну, город, почтовый индекс, улицу.
+                        </div>
+                        <div class="card-footer {{ borderClass }}">
+                            <a class="btn btn-sm btn-primary" href="#" role="button" title="edit">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            {% if not deliveryAddresses.isDefault %}
+                                <a class="btn btn-sm btn-success" href="#" role="button">set as default</a>
+                            {% endif %}
 
+                        </div>
+                    </div>
                 </div>
-                <div class="card-footer bg-light">
-                    <a class="btn btn-sm btn-primary" href="#" role="button" title="edit">
-                        <i class="fas fa-edit"> edit</i>
-                    </a>
-                    <a class="btn btn-sm btn-success" href="#" role="button">set as default</a>
-                </div>
-            </div>
-        </div>
+            {% endfor %}
+        {% else %}
+            <p class="pl-3 text-muted">No one</p>
+        {% endif %}
     </div>
-    <p class="my-5">
-        <a href="{{ path('') }}" class="btn btn-primary">Add new</a>
-    </p>
+
+    {% set modalId = 'modalId' %}
+    {% set formId = 'formId' %}
+    {% set formTitleId = 'formTitle' %}
+    {% set alertMessageId = 'alertMessageId' %}
+    {% set buttonAddNewId = 'buttonAddNewId' %}
+    <!-- Modal -->
+    {% include 'lk/delivery_address/form.modal.html.twig' with {
+        'modalId': modalId,
+        'formId': formId,
+        'formTitleId' : formTitleId,
+        'alertMessageId': alertMessageId
+    } %}
+
+    {% if deliveryAddressesData.canAddNew is defined and deliveryAddressesData.canAddNew %}
+        <p class="my-5">
+            <button id="{{ buttonAddNewId }}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{ modalId }}">
+                Add
+            </button>
+        </p>
+    {% endif %}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $('#{{ formId }}').on('submit', function(e) {
+                e.preventDefault();
+                return false;
+            });
+        });
+
+    </script>
 
 {% endblock %}
 

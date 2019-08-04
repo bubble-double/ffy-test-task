@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ORM\Table(name="DeliveryAddress")
  * @ORM\Entity(repositoryClass="App\Repository\DeliveryAddressRepository")
  */
 class DeliveryAddress
@@ -17,9 +18,18 @@ class DeliveryAddress
      *
      * @var int
      */
-    private $id;
+    protected $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="userId", referencedColumnName="id")
+     *
+     * @var User|null
+     */
+    protected $user;
+
+    /**
+     * @Assert\NotBlank()
      * @Assert\Length(
      *      min = 1,
      *      max = 80,
@@ -31,9 +41,10 @@ class DeliveryAddress
      *
      * @var string
      */
-    private $country;
+    protected $country;
 
     /**
+     * @Assert\NotBlank()
      * @Assert\Length(
      *      min = 1,
      *      max = 80,
@@ -45,9 +56,10 @@ class DeliveryAddress
      *
      * @var string
      */
-    private $city;
+    protected $city;
 
     /**
+     * @Assert\NotBlank()
      * @Assert\Length(
      *      min = 1,
      *      max = 255,
@@ -59,24 +71,34 @@ class DeliveryAddress
      *
      * @var string
      */
-    private $street;
+    protected $street;
 
     /**
+     * @Assert\NotBlank()
      * @Assert\Length(
      *      min = 1,
      *      max = 80,
-     *      minMessage = "Your postIndex must be at least {{ limit }} characters long",
-     *      maxMessage = "Your postIndex cannot be longer than {{ limit }} characters"
+     *      minMessage = "Your postcode must be at least {{ limit }} characters long",
+     *      maxMessage = "Your postcode cannot be longer than {{ limit }} characters"
      * )
      *
      * @ORM\Column(type="string", length=80)
      *
      * @var string
      */
-    private $postIndex;
+    protected $postcode;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\Type("boolean")
+     *
+     * @ORM\Column(type="boolean", name="isDefault", options={"default" : 0})
+     *
+     * @var bool
+     */
+    protected $isDefault;
+
+    /**
+     * @Assert\DateTime()
      *
      * @ORM\Column(type="datetime")
      *
@@ -110,6 +132,22 @@ class DeliveryAddress
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User|null $user
+     */
+    public function setUser(User $user = null): void
+    {
+        $this->user = $user;
     }
 
     /**
@@ -169,17 +207,33 @@ class DeliveryAddress
     /**
      * @return string
      */
-    public function getPostIndex(): string
+    public function getPostcode(): string
     {
-        return $this->postIndex;
+        return $this->postcode;
     }
 
     /**
-     * @param string $postIndex
+     * @param string $postcode
      */
-    public function setPostIndex(string $postIndex): void
+    public function setPostcode(string $postcode): void
     {
-        $this->postIndex = $postIndex;
+        $this->postcode = $postcode;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefault(): bool
+    {
+        return $this->isDefault;
+    }
+
+    /**
+     * @param bool $isDefault
+     */
+    public function setAsDefault(bool $isDefault): void
+    {
+        $this->isDefault = $isDefault;
     }
 
     /**

@@ -17,4 +17,14 @@ class IndexController extends AbstractController
     {
         return $this->render('common/index.html.twig');
     }
+
+    /**
+     * @Route("/api-doc", name="api_doc", methods={"GET"})
+     *
+     * @return Response
+     */
+    public function apiDocAction(): Response
+    {
+        return $this->render('common/api_doc.html.twig');
+    }
 }

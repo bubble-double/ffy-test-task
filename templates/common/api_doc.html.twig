@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Api doc{% endblock %}
+
+{% block body %}
+    <h1 class="h3 pt-5 pb-5">Api documentation</h1>
+
+    <h4>Login</h4>
+    <pre class="alert alert-secondary shadow-sm p-3 mb-5 bg-light rounded">
+        {# format violation for correct format into tag <code>, twig`s 'spaceless' not help #}
+        <code>
+    POST /login
+    Content-Type: application/x-www-form-urlencoded
+    \r\n\r\n
+    _username=user1&_password=1234566
+        </code>
+    </pre>
+
+    <h4>Get delivery address</h4>
+    <pre class="alert alert-secondary shadow-sm p-3 mb-5 bg-light rounded">
+        <code>
+    GET /api/delivery-address/{DeliveryAddressId}
+        </code>
+    </pre>
+
+    <h4>Create delivery address</h4>
+    <pre class="alert alert-secondary shadow-sm p-3 mb-5 bg-light rounded">
+        <code>
+    POST /api/delivery-address/
+    Content-Type: application/json
+    {
+        "country": "Iceland",
+        "city": "Reykjavík",
+        "street": "Laugavegur",
+        "postcode": "AB-123987"
+    }
+        </code>
+    </pre>
+
+    <h4>Update delivery address</h4>
+    <pre class="alert alert-secondary shadow-sm p-3 mb-5 bg-light rounded">
+        <code>
+    PUT /api/delivery-address/{DeliveryAddressId}
+    Content-Type: application/json
+    {
+        "street": "Adalstraeti",
+        "postcode": "BA-321789"
+    }
+        </code>
+    </pre>
+
+    <h4>Delete delivery address</h4>
+    <pre class="alert alert-secondary shadow-sm p-3 mb-5 bg-light rounded">
+        <code>
+    DELETE /api/delivery-address/{DeliveryAddressId}
+        </code>
+    </pre>
+
+    <h4>Set delivery address as default</h4>
+    <pre class="alert alert-secondary shadow-sm p-3 mb-5 bg-light rounded">
+        <code>
+    PUT /api/delivery-address/{DeliveryAddressId}/set-as-default
+        </code>
+    </pre>
+
+    <h4>Get user info</h4>
+    <pre class="alert alert-secondary shadow-sm p-3 mb-5 bg-light rounded">
+        <code>
+    GET /api/user
+        </code>
+    </pre>
+
+{% endblock %}

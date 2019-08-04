@@ -3,18 +3,19 @@
 namespace App\Entity;
 
 use App\Enum\User\UserRolesEnum;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ORM\Table(name="User")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface
 {
     /**
-     * @Assert\NotBlank
-     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -24,6 +25,14 @@ class User implements UserInterface
     protected $id;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\DeliveryAddress", mappedBy="user", orphanRemoval=true)
+     *
+     * @var Collection|DeliveryAddress[]
+     */
+    protected $deliveryAddresses;
+
+    /**
+     * @Assert\Email()
      * @Assert\Length(
      *      min = 1,
      *      max = 80,
@@ -38,6 +47,7 @@ class User implements UserInterface
     protected $email;
 
     /**
+     * @Assert\NotBlank()
      * @Assert\Length(
      *      min = 1,
      *      max = 255,
@@ -52,6 +62,7 @@ class User implements UserInterface
     protected $password;
 
     /**
+     * @Assert\NotBlank()
      * @Assert\Length(
      *      min = 1,
      *      max = 80,
@@ -78,6 +89,11 @@ class User implements UserInterface
     protected $lastName;
 
     /**
+     * @Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Your salt cannot be longer than {{ limit }} characters"
+     * )
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
      *
      * @var string|null
@@ -85,6 +101,11 @@ class User implements UserInterface
     protected $salt;
 
     /**
+     * @Assert\Length(
+     *      max = 512,
+     *      maxMessage = "Your roles cannot be longer than {{ limit }} characters"
+     * )
+     *
      * @ORM\Column(type="string", length=512, nullable=true)
      *
      * @var string|null
@@ -92,7 +113,7 @@ class User implements UserInterface
     protected $roles;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\DateTime()
      *
      * @ORM\Column(type="datetime")
      *
@@ -118,6 +139,7 @@ class User implements UserInterface
     {
         $this->created = new \DateTime();
         $this->updated = new \DateTime();
+        $this->deliveryAddresses = new ArrayCollection();
     }
 
     /**
@@ -126,6 +148,43 @@ class User implements UserInterface
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return Collection|DeliveryAddress[]
+     */
+    public function getDeliveryAddresses(): Collection
+    {
+        return $this->deliveryAddresses;
+    }
+
+    /**
+     * @param DeliveryAddress $deliveryAddress
+     *
+     * @return void
+     */
+    public function addDeliveryAddress(DeliveryAddress $deliveryAddress): void
+    {
+        if (!$this->deliveryAddresses->contains($deliveryAddress)) {
+            $this->deliveryAddresses[] = $deliveryAddress;
+            $deliveryAddress->setUser($this);
+        }
+    }
+
+    /**
+     * @param DeliveryAddress $deliveryAddress
+     *
+     * @return void
+     */
+    public function removeDeliveryAddress(DeliveryAddress $deliveryAddress): void
+    {
+        if ($this->deliveryAddresses->contains($deliveryAddress)) {
+            $this->deliveryAddresses->removeElement($deliveryAddress);
+            // set the owning side to null (unless already changed)
+            if ($deliveryAddress->getUser() === $this) {
+                $deliveryAddress->setUser(null);
+            }
+        }
     }
 
     /**

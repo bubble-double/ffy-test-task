@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\DeliveryAddress;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -14,37 +15,27 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class DeliveryAddressRepository extends ServiceEntityRepository
 {
+    /**
+     * @inheritdoc
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, DeliveryAddress::class);
     }
 
-    // /**
-    //  * @return DeliveryAddress[] Returns an array of DeliveryAddress objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param User $user
+     *
+     * @return int
+     */
+    public function updateAllDropPropertyIsDefault(User $user): int
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
+        $qb = $this->createQueryBuilder('da');
+        return $qb->update()
+            ->set('da.isDefault', $qb->expr()->literal(false))
+            ->where($qb->expr()->eq('da.user', ':user'))
+            ->setParameter('user', $user->getId())
             ->getQuery()
-            ->getResult()
-        ;
+            ->execute();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?DeliveryAddress
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

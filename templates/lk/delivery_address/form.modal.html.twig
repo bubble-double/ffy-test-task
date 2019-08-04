@@ -1,0 +1,60 @@
+{% if modalId is defined and formId is defined and alertMessageId is defined and formTitleId is defined %}
+    <div class="modal fade" id="{{ modalId }}" tabindex="-1" role="dialog" aria-labelledby="{{ formTitleId }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form id="{{ formId }}" action="" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="{{ formTitleId }}"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="{{ alertMessageId }}" class="alert alert-warning alert-dismissible fade show" role="alert">
+                            Invalid user name or password
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="countryInput">Country</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="countryInput"
+                                aria-describedby="emailHelp"
+                                placeholder="Country"
+                                name="country"
+                            >
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="postcodeInput">Postcode</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="postcodeInput"
+                                    placeholder="Postcode"
+                                    name="postcode"
+                                >
+                            </div>
+                            <div class="form-group col-md-8">
+                                <label for="cityInput">City</label>
+                                <input type="text" class="form-control" id="cityInput" placeholder="City" name="city">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="streetInput">Street</label>
+                            <input type="text" class="form-control" id="streetInput" placeholder="Street" name="street">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
